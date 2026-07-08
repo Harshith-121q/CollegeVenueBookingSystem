@@ -16,7 +16,7 @@ const [showModal, setShowModal] = useState(false)
 const [modalMessage, setModalMessage] = useState("")
 const [formError, setFormError] = useState("") //
 
-const {login,register,error}=useAuth()
+const {login,register} = useAuth()
 const navigate = useNavigate()
 
 const handleSubmit = async (e)=>{

@@ -57,9 +57,12 @@ export default function AdminDashboard() {
   }
 
   useEffect(() => {
-    loadVenues()
-    loadRequests()
-    loadAutomationSetting()
+    const init = async () => {
+      await loadVenues()
+      await loadRequests()
+      await loadAutomationSetting()
+    }
+    void init()
   }, [])
 
   const handleChange = (e) => {

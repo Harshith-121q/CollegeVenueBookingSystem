@@ -23,7 +23,10 @@ export default function FacultyDashboard() {
   }
 
   useEffect(() => {
-    loadBookings()
+    const init = async () => {
+      await loadBookings()
+    }
+    void init()
   }, [])
 
   const pendingBookings = useMemo(

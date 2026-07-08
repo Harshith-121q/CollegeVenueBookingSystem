@@ -13,7 +13,7 @@ const initialForm = {
 
 export default function VenueBooking() {
   const [venues, setVenues] = useState([])
-  const [myBookings, setMyBookings] = useState([])
+  const [, setMyBookings] = useState([])
   const [selectedBlock, setSelectedBlock] = useState('')
   const [selectedFloor, setSelectedFloor] = useState('')
   const [selectedVenue, setSelectedVenue] = useState(null)
@@ -42,8 +42,11 @@ export default function VenueBooking() {
   }
 
   useEffect(() => {
-    loadVenues()
-    loadBookings()
+    const init = async () => {
+      await loadVenues()
+      await loadBookings()
+    }
+    void init()
   }, [])
 
   const blocks = useMemo(() => {
@@ -65,25 +68,25 @@ export default function VenueBooking() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const fetchVenueBookings = async () => {
-    if (!selectedVenue || !formData.date) {
-      setVenueBookings([])
-      return
-    }
-
-    try {
-      const res = await API.get(`/venue_booking/venue_bookings/${selectedVenue._id}`, {
-        params: { date: formData.date },
-      })
-      setVenueBookings(res.data?.payload || [])
-    } catch (err) {
-      console.error('Failed to load venue bookings', err)
-      setVenueBookings([])
-    }
-  }
-
   useEffect(() => {
-    fetchVenueBookings()
+    const load = async () => {
+      if (!selectedVenue || !formData.date) {
+        setVenueBookings([])
+        return
+      }
+
+      try {
+        const res = await API.get(`/venue_booking/venue_bookings/${selectedVenue._id}`, {
+          params: { date: formData.date },
+        })
+        setVenueBookings(res.data?.payload || [])
+      } catch (err) {
+        console.error('Failed to load venue bookings', err)
+        setVenueBookings([])
+      }
+    }
+
+    void load()
   }, [selectedVenue, formData.date])
 
   const isOverlapping = (existingStart, existingEnd, newStart, newEnd) => {
@@ -100,7 +103,6 @@ export default function VenueBooking() {
       return
     }
 
-    const selectedDate = new Date(formData.date)
     const now = new Date()
     const todayString = today
     const selectedDateString = formData.date
@@ -166,18 +168,7 @@ export default function VenueBooking() {
     }
   }
 
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case 'booked':
-        return 'Approved'
-      case 'rejected':
-        return 'Rejected'
-      case 'cancelled':
-        return 'Cancelled'
-      default:
-        return 'Pending'
-    }
-  }
+  // status label helper removed (unused in this component)
 
   return (
     <div className="p-6 font-sans">
