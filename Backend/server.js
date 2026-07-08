@@ -14,9 +14,21 @@ dotenv.config()
 
 const app = exp() // 1.
 // ✅ CORS HERE
+// CORS allowed origins: localhost for dev and Vercel production/preview domains
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://college-venue-booking-system.vercel.app",
+  "https://college-venue-booking-system-p0348zhk4.vercel.app",
+]
+
 app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true
+  origin: (origin, callback) => {
+    // allow requests with no origin (e.g., mobile apps, curl)
+    if (!origin) return callback(null, true)
+    if (allowedOrigins.includes(origin)) return callback(null, true)
+    return callback(new Error('CORS policy: Origin not allowed'), false)
+  },
+  credentials: true,
 }))
 // ✅ Middlewares
 app.use(exp.json())   // body parser middleware`
