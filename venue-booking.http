@@ -1,0 +1,10 @@
+POST  http://localhost:5000/venue_booking/book_venue/6a1322803ec8837547992197
+Content-Type: application/json
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTQ0NGEwNDIxNWM2OWUxZmYyYmVlZCIsImVtYWlsIjoiZmFjdWx0eTJAZ21haWwuY29tIiwicm9sZSI6IkZBQ1VMVFkiLCJpYXQiOjE3Nzk3MTMxOTAsImV4cCI6MTc3OTcxNjc5MH0.p8xeMkUkDisYOIGE3b5QlOhhk-MccbmuGOSKmB464ig
+
+{
+    "date":"2026-05-25",
+    "startTime":"19:00",
+    "endTime":"20:00",
+    "reason":"For Teaching cse - c sec"
+}

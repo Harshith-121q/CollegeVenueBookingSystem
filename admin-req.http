@@ -1,0 +1,32 @@
+POST http://localhost:5000/common-route/register
+Content-Type: application/json
+
+{
+    "firstname": "hello",
+  "lastname": "hi",
+  "email": "admin@gmail.com",
+  "role":"ADMIN",
+  "password": "212"
+}
+
+###
+POST http://localhost:5000/common-route/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "212"
+}
+
+###
+GET http://localhost:5000/common-route/logout
+
+###
+PUT http://localhost:5000/common-route/changePassword
+Content-Type: application/json
+Cookie:  token=
+
+{
+    "oldPassword":"212",
+    "newPassword":"121"
+}

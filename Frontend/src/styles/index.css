@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Color Palette derived from your modern visual style */
+    --color-bg-primary: #f8fafc;     /* Ultra-light slate background */
+    --color-surface: #ffffff;        /* Pure white for containers/cards */
+    --color-border: #e2e8f0;         /* Light gray border grid lines */
+    
+    --color-text-main: #0f172a;      /* Deep dark slate for primary titles */
+    --color-text-muted: #64748b;     /* Muted cool gray for labels/subtitles */
+
+    /* Identity Theme Accents (Admin/Faculty Actions) */
+    --color-primary: #1e40af;        /* Authoritative Navy / Royal Blue */
+    --color-primary-hover: #1d4ed8;  
+    
+    /* Traffic-Light Status States */
+    --color-success: #10b981;        /* Approved/Available */
+    --color-warning: #f59e0b;        /* Pending Review */
+    --color-danger: #ef4444;         /* Rejected/Occupied */
+  }
+
+  body {
+    @apply bg-[var(--color-bg-primary)] text-[var(--color-text-main)] antialiased font-sans selection:bg-blue-100;
+  }
+
+  /* Standardizing form element behaviors */
+  input, select, textarea {
+    @apply outline-none transition-all duration-200 ease-in-out;
+  }
+}
+
+@layer components {
+  /* Layout Grid Cards matching the reference layout */
+  .app-card {
+    @apply bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6 shadow-sm transition-shadow duration-300 hover:shadow-md;
+  }
+
+  /* Clean Data Grid Tables for Booking History */
+  .data-table-container {
+    @apply w-full overflow-hidden bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-sm;
+  }
+
+  .data-table {
+    @apply w-full text-left border-collapse;
+  }
+
+  .data-table th {
+    @apply bg-slate-50 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] p-4 border-b border-[var(--color-border)];
+  }
+
+  .data-table td {
+    @apply p-4 text-sm border-b border-[var(--color-border)] align-middle text-slate-700;
+  }
+
+  /* Modern Inputs & Dropdowns for your Venue, Start Time, and End Time selectors */
+  .form-label {
+    @apply block text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-2;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-2.5 bg-white border border-[var(--color-border)] rounded-lg text-sm text-[var(--color-text-main)] placeholder-slate-400 focus:border-[var(--color-primary)] focus:ring-4 focus:ring-blue-50;
+  }
+
+  /* Standardized Interactive Buttons */
+  .btn-primary {
+    @apply px-5 py-2.5 bg-[var(--color-primary)] text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-[var(--color-primary-hover)] focus:ring-4 focus:ring-blue-100 transition-all active:scale-[0.98];
+  }
+
+  /* Traffic-Light Pill Badges for statuses (Confirmed, Pending, Rejected) */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border;
+  }
+
+  .badge-success {
+    @apply bg-emerald-50 border-emerald-200 text-emerald-700;
+  }
+
+  .badge-warning {
+    @apply bg-amber-50 border-amber-200 text-amber-700;
+  }
+
+  .badge-danger {
+    @apply bg-rose-50 border-rose-200 text-rose-700;
+  }
+}

@@ -1,0 +1,61 @@
+frontend/
+│
+├── public/                     # static files (favicon, etc.)
+│
+├── src/
+│   ├── assets/                # images, icons
+│   │   ├── logo.png
+│   │
+│   ├── components/            # reusable UI components
+│   │   ├── common/
+│   │   │   ├── Button.jsx
+│   │   │   ├── Loader.jsx
+│   │   │
+│   │   ├── layout/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Sidebar.jsx
+│   │   │
+│   │   ├── booking/
+│   │   │   ├── BookingCard.jsx
+│   │   │   ├── BookingForm.jsx
+│   │
+│   ├── pages/                 # route-level pages
+│   │   ├── Home.jsx
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   │   ├── Venues.jsx
+│   │   ├── VenueDetails.jsx
+│   │   ├── BookVenue.jsx
+│   │   ├── MyBookings.jsx
+│   │   ├── AdminDashboard.jsx
+│   │
+│   ├── services/              # API calls (VERY IMPORTANT)
+│   │   ├── api.js             # axios base setup
+│   │   ├── authService.js
+│   │   ├── venueService.js
+│   │   ├── bookingService.js
+│   │
+│   ├── context/               # global state (auth)
+│   │   ├── AuthContext.jsx
+│   │
+│   ├── hooks/                 # custom hooks
+│   │   ├── useAuth.js
+│   │   ├── useBooking.js
+│   │
+│   ├── routes/                # routing logic
+│   │   ├── AppRoutes.jsx
+│   │   ├── ProtectedRoute.jsx
+│   │
+│   ├── utils/                 # helper functions
+│   │   ├── timeUtils.js
+│   │   ├── dateUtils.js
+│   │
+│   ├── styles/                # global styles
+│   │   ├── index.css
+│   │
+│   ├── App.jsx                # root component
+│   ├── main.jsx               # entry point
+│
+├── .env                       # environment variables
+├── package.json
+├── vite.config.js

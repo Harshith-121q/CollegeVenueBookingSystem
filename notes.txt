@@ -1,0 +1,139 @@
+🔐 Why do we create a JWT?
+
+After login, your server needs a way to say:
+
+👉 “This user is already authenticated” for future requests
+
+But HTTP is stateless (it forgets everything after each request).
+
+🧠 So what JWT does
+
+When you create a token using sign():
+
+You are generating a proof of identity
+It contains user info (id, role, email, etc.)
+It is digitally signed (can’t be tampered)
+
+👉 Think of it like a digital ID card
+
+🔁 Flow
+User logs in ✅
+Server verifies credentials ✅
+Server creates JWT ✅
+Client stores it
+Client sends it with every request
+Server verifies it → allows access
+🍪 Why store JWT in httpOnly cookie?
+res.cookie("token", signedToken, {
+  httpOnly: true,
+  secure: false,
+  sameSite: "lax",
+});
+✅ 1. httpOnly: true
+Prevents JavaScript from accessing the cookie
+Protects against XSS attacks
+
+👉 Hacker cannot steal token using JS
+
+✅ 2. Automatically sent with every request
+
+Once stored:
+
+Browser sends cookie automatically
+You don’t need to manually attach token
+✅ 3. Cleaner than localStorage
+Storage	Security
+localStorage	❌ vulnerable
+httpOnly cookie	✅ safer
+🔥 Why not just send user ID instead?
+
+Because:
+
+❌ User can modify it
+❌ No security
+❌ No verification
+
+JWT solves this by:
+✔ Signing with secret key
+✔ Detecting tampering
+
+🔑 Why include user data inside JWT?
+{
+  id,
+  email,
+  role,
+  firstName,
+  ...
+}
+
+👉 So you don’t need DB call every time
+
+Example:
+
+Check role (admin/user)
+Identify user quickly
+🚨 Important Concept
+
+JWT = Authentication, not Authorization
+
+JWT → Who are you? ✅
+Role → What can you do? ✅
+🎯 Final Understanding
+
+👉 You create JWT because:
+
+Server doesn’t remember users
+Token acts as identity proof
+
+👉 You store it in httpOnly cookie because:
+
+Secure from attacks
+Automatically handled by browser
+🧠 Real-Life Analogy
+Login → Show ID at gate
+JWT → Security badge 🎫
+Cookie → Badge stored in pocket
+Each request → Show badge again
+
+
+
+
+Cookie Attributes (Short):
+
+httpOnly → JS cannot access cookie (security 🔒)
+secure → sent only over HTTPS 🌐
+sameSite → controls cross-site requests (strict / lax / none)
+maxAge → expiry time in milliseconds ⏳
+expires → exact expiry date 📅
+path → URL path where cookie is valid 📍
+domain → domain/subdomain access 🌍
+signed → prevents tampering ✍️
+
+
+
+Summery of token and cookie
+✅ Correct Understanding (Polished)
+
+👉 Step-by-step flow:
+
+User logs in
+Server creates a JWT token
+Token is stored in a cookie
+Browser automatically sends cookie in every request
+Server reads token from cookie
+Server verifies token
+If valid → user is identified ✅
+
+
+
+
+What compare() actually does:
+
+compare(plainPassword, hashedPassword)
+
+👉 It:
+
+Takes your plain password ("123456")
+Hashes it internally
+Compares with stored hash
+Returns result

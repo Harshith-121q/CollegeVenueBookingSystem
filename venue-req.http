@@ -1,0 +1,39 @@
+
+// create venue
+POST http://localhost:5000/venue/create_venue
+Content-Type: application/json
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMDliNGY4YmJlNTQzYTJhMGVmOWMwOCIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5NjM4ODc1LCJleHAiOjE3Nzk2NDI0NzV9.wyVCSm5OmvK7yvwCZlFwIykYYJO208Abco-lZHcd-Ig
+
+{
+    "name":"A block venue ",
+    "roomNumber":"B-201", 
+    "type":"LAB",
+    "capacity":100,
+    "block":"A", 
+    "floor":2,
+    "facilities":["AC","FAN"]
+}
+
+###     // update venue
+PUT http://localhost:5000/venue/update_venue/6a0c761499532e4c51de9789
+Content-Type: application/json
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMDliNGY4YmJlNTQzYTJhMGVmOWMwOCIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc5MjAxNTI4LCJleHAiOjE3NzkyMDUxMjh9.j5adreed55GJwmfP8g63Smc6RRi0gdnBICzH7rS5zUA
+
+{
+     "name":"A block venue ",
+    "roomNumber":"B-201", 
+    "type":"LAB",
+    "capacity":100,
+    "block":"A", 
+    "floor":2,
+    "facilities":["AC","FAN","PROJECTOR"]
+}
+
+###   // delete venue 
+DELETE http://localhost:5000/venue/delete_venue/6a0c761499532e4c51de9789
+
+###     // get all venues 
+GET http://localhost:5000/venue/get_venues
+
+### // get venue By id
+GET http://localhost:5000/venue/get-venueById/6a0b1f47d3aab642bf8c1096
