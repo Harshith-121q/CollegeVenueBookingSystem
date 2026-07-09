@@ -46,6 +46,7 @@
       setError("")
 
       try {
+        console.log("Sending login request with credentials:", credentials)
         const response = await API.post("/common-route/login", credentials)
 
         const { payload, token: newToken } = response.data

@@ -82,8 +82,9 @@ catch (err) {
 export const login = async(req,res)=>{
     // Take email and password from request
     const {email , password } = req.body;
+    console.log("Login request received:", { email, password, bodyKeys: Object.keys(req.body) })
     if (!email || !password) {
-        return res.status(400).json({ message: "Email and password are required" })
+        return res.status(400).json({ message: "Email and password are required", received: { email: !!email, password: !!password } })
     }
     console.log(req.body)
     // Find user in database using email
@@ -146,6 +147,7 @@ export const login = async(req,res)=>{
     let userObj = user.toObject();
     delete userObj.password;
     // Send success response
+    console.log("Login success for user:", userObj.email)
     res.status(200).json({ message: "login success", payload: userObj ,token:signedToken});
 }
 
