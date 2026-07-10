@@ -1,136 +1,137 @@
-  /* eslint-disable react-refresh/only-export-components */
-  import { createContext, useState, useCallback , useEffect } from "react"
-  import API from "../api/axios"
+    /* eslint-disable react-refresh/only-export-components */
+    import { createContext, useState, useCallback , useEffect } from "react"
+    import API from "../api/axios"
 
-  export const AuthContext = createContext()
+    export const AuthContext = createContext()
 
-  export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null)
-    const [token, setToken] = useState(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState("")
+    export function AuthProvider({ children }) {
+      const [user, setUser] = useState(null)
+      const [token, setToken] = useState(null)
+      const [loading, setLoading] = useState(true)
+      const [error, setError] = useState("")
 
-    useEffect(() => {                        // this useEffect is used for restore the user credentials also after the user refreshes the page
-      const initAuth = async () => {
-        setLoading(true)
+      useEffect(() => {                        // this useEffect is used for restore the user credentials also after the user refreshes the page
+        const initAuth = async () => {
+          setLoading(true)
 
-        const storedToken = localStorage.getItem("token")
-        console.log("Stored Token:",storedToken)
+          const storedToken = localStorage.getItem("token")
+          console.log("Stored Token:",storedToken)
 
-        if (!storedToken) {
-          setLoading(false)
-          return
+          if (!storedToken) {
+            setLoading(false)
+            return
+          }
+
+          setToken(storedToken)
+
+            try {
+              const res = await API.get("/common-route/me")
+              setUser(res.data.payload)
+            } catch {
+              localStorage.removeItem("token")
+              setToken(null)
+              setUser(null)
+            }
+            finally{
+              setLoading(false)
+            }
         }
 
-        setToken(storedToken)
+        initAuth()
+      }, [])
 
-          try {
-            const res = await API.get("/common-route/me")
-            setUser(res.data.payload)
-          } catch {
-            localStorage.removeItem("token")
-            setToken(null)
-            setUser(null)
-          }
-          finally{
-            setLoading(false)
-          }
-      }
+      // 🔐 LOGIN
+      const login = useCallback(async (credentials) => {
+        setLoading(true)
+        setError("")
 
-      initAuth()
-    }, [])
+        try {
+          console.log("Sending login request with credentials:", credentials)
+          const response = await API.post("/common-route/login", credentials)
 
-    // 🔐 LOGIN
-    const login = useCallback(async (credentials) => {
-      setLoading(true)
-      setError("")
+          const { payload, token: newToken } = response.data
 
-      try {
-        console.log("Sending login request with credentials:", credentials)
-        const response = await API.post("/common-route/login", credentials)
+          setToken(newToken)
+          setUser(payload)
+          localStorage.setItem("token", newToken)
 
-        const { payload, token: newToken } = response.data
+          return payload
 
-        setToken(newToken)
-        setUser(payload)
-        localStorage.setItem("token", newToken)
+        } catch (err) {
+          console.log("🔥 BACKEND ERROR:", err.response?.data)
+          const message = err.response?.data?.message || "Login failed"
+          setError(message)
+          throw err
+        } finally {
+          setLoading(false)
+        }
+      }, [])
 
-        return payload
+      // 📝 REGISTER
+      const register = useCallback(async (userData) => {
+        setLoading(true)
+        setError("")
 
-      } catch (err) {
-        const message = err.response?.data?.message || "Login failed"
-        setError(message)
-        throw err
-      } finally {
-        setLoading(false)
-      }
-    }, [])
+        try {
+          const response = await API.post("/common-route/register", userData)
+          return response.data
 
-    // 📝 REGISTER
-    const register = useCallback(async (userData) => {
-      setLoading(true)
-      setError("")
+        } catch (err) {
+          const message = err.response?.data?.message || "Registration failed"
+          setError(message)
+          throw err
+        } finally {
+          setLoading(false)
+        }
+      }, [])
 
-      try {
-        const response = await API.post("/common-route/register", userData)
-        return response.data
+      // 🚪 LOGOUT
+      const logout = useCallback(async () => {
+        setLoading(true)
 
-      } catch (err) {
-        const message = err.response?.data?.message || "Registration failed"
-        setError(message)
-        throw err
-      } finally {
-        setLoading(false)
-      }
-    }, [])
+        try {
+          await API.post("/common-route/logout") // token auto attached
 
-    // 🚪 LOGOUT
-    const logout = useCallback(async () => {
-      setLoading(true)
+          setToken(null)
+          setUser(null)
+          localStorage.removeItem("token")
 
-      try {
-        await API.post("/common-route/logout") // token auto attached
+        } catch (err) {
+          console.error("Logout Error:", err)
+        } finally {
+          setLoading(false)
+        }
+      }, [token])
 
-        setToken(null)
-        setUser(null)
-        localStorage.removeItem("token")
+    //   const getCurrentUser = async () => {
+    //   try {
+    //     const res = await axios.get("/common-route/me", {
+    //       headers: {
+    //         Authorization: `Bearer ${localStorage.getItem("token")}`
+    //       }
+    //     });
 
-      } catch (err) {
-        console.error("Logout Error:", err)
-      } finally {
-        setLoading(false)
-      }
-    }, [token])
-
-  //   const getCurrentUser = async () => {
-  //   try {
-  //     const res = await axios.get("/common-route/me", {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`
-  //       }
-  //     });
-
-  //     setUser(res.data.payload);
-  //   } catch (err) {
-  //     console.log(err);
-  //     setUser(null);
-  //   }
-  // }
+    //     setUser(res.data.payload);
+    //   } catch (err) {
+    //     console.log(err);
+    //     setUser(null);
+    //   }
+    // }
 
 
-    return (
-      <AuthContext.Provider
-        value={{
-          user,
-          token,
-          login,
-          register,
-          logout,
-          loading,
-          error,
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    )
-  }
+      return (
+        <AuthContext.Provider
+          value={{
+            user,
+            token,
+            login,
+            register,
+            logout,
+            loading,
+            error,
+          }}
+        >
+          {children}
+        </AuthContext.Provider>
+      )
+    }

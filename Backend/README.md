@@ -35,3 +35,8 @@ PORT=4000 npm start    # use appropriate platform command on Windows
 - Health check: optional; Render will use your start command
 
 If you want, I can add a sample Render `start`/deploy instruction in the repo root or create a small `deploy.md` with screenshots.
+
+
+
+
+so my project is successfully deployed and working , but there is a small issue i'll explain it seee if one faculty books the venuee then the req is going to admin and admin had not yet accept or reject the venue so if another faculty books the same venue it is sowing the venue is already booked by another faculty so it should not show so admin can accept the venue of any one faculty so other faculty 

@@ -82,41 +82,44 @@ catch (err) {
 export const login = async(req,res)=>{
     // Take email and password from request
     const {email , password } = req.body;
-    console.log("Login request received:", { email, password, bodyKeys: Object.keys(req.body) })
+    console.log("📥 Login request received:", { email, password, bodyKeys: Object.keys(req.body), contentType: req.headers['content-type'] })
     if (!email || !password) {
+        console.warn("❌ Missing credentials:", { email: !!email, password: !!password })
         return res.status(400).json({ message: "Email and password are required", received: { email: !!email, password: !!password } })
     }
-    console.log(req.body)
-    // Find user in database using email
-    const user = await UserModel.findOne({email:email})
-    // → If not found → return "User not found"
-    if(!user){
-        return res.status(400).json({message:"Invalid Email"})
-    }
-    // Compare entered password with stored hashed password\
-    const isMatched = await compare(password,user.password) // 
-    // console.log(isMatched)
+    
+    try {
+        console.log("🔍 Looking up user:", email)
+        // Find user in database using email
+        const user = await UserModel.findOne({email:email})
+        // → If not found → return "User not found"
+        if(!user){
+            return res.status(400).json({message:"Invalid Email"})
+        }
+        // Compare entered password with stored hashed password\
+        const isMatched = await compare(password,user.password) // 
+        // console.log(isMatched)
 
-    // → If not matching → return "Invalid credentials"
-    if(!isMatched){
-        return res.status(400).json({
-            message:"Password is incorrect"
-        })  
-    }
-    // Generate JWT token (include user id / role)          // token is used to 
-    const signedToken = sign(
-        {
-            id: user._id,
-            email: email,
-            role: user.role,
-            name: user.name,
-        },
-        process.env.SECRET_KEY,
-        {
-            expiresIn:"1h"
-        },
+        // → If not matching → return "Invalid credentials"
+        if(!isMatched){
+            return res.status(400).json({
+                message:"Password is incorrect"
+            })  
+        }
+        // Generate JWT token (include user id / role)          // token is used to 
+        const signedToken = sign(
+            {
+                id: user._id,
+                email: email,
+                role: user.role,
+                name: user.name,
+            },
+            process.env.SECRET_KEY,
+            {
+                expiresIn:"1h"
+            },
 
-    )
+        )
 
 //     ✅ Correct Understanding (Polished)
 
@@ -129,8 +132,8 @@ export const login = async(req,res)=>{
 // Server reads token from cookie
 // Server verifies token
 // If valid → user is identified ✅
-    // Store token in cookie (httpOnly) 
-    
+        // Store token in cookie (httpOnly) 
+        
 // ✔ Token identifies the user
 // ✔ Cookie just stores & sends the token
 
@@ -143,12 +146,17 @@ export const login = async(req,res)=>{
 //     sameSite: "lax",
 //   });
 
-   //remove password from user document
-    let userObj = user.toObject();
-    delete userObj.password;
-    // Send success response
-    console.log("Login success for user:", userObj.email)
-    res.status(200).json({ message: "login success", payload: userObj ,token:signedToken});
+       //remove password from user document
+        let userObj = user.toObject();
+        delete userObj.password;
+        // Send success response
+        console.log("Login success for user:", userObj.email)
+        res.status(200).json({ message: "login success", payload: userObj ,token:signedToken});
+    } catch (err) {
+        console.error("❌ Login Error:", err.message)
+        console.error("Full error:", err)
+        res.status(500).json({ message: "Login failed - server error", error: err.message })
+    }
 }
 
 

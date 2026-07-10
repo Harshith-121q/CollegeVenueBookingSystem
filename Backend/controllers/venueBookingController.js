@@ -32,6 +32,7 @@ const triggerAiAutomation = async (booking) => {
   }
 
   const webhookUrl = process.env.AI_WEBHOOK_URL;
+  console.log("DEBUG webhookUrl:", JSON.stringify(webhookUrl));
   if (!webhookUrl) {
     console.log("AI skipped (disabled)");
     return;
