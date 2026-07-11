@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import API from '../api/axios'
 
 const today = new Date().toISOString().split('T')[0]
@@ -12,6 +13,7 @@ const initialForm = {
 }
 
 export default function VenueBooking() {
+  const navigate = useNavigate()
   const [venues, setVenues] = useState([])
   const [, setMyBookings] = useState([])
   const [selectedBlock, setSelectedBlock] = useState('')
@@ -174,8 +176,18 @@ export default function VenueBooking() {
     <div className="p-6 font-sans">
       <div className="max-w-7xl mx-auto space-y-8">
         <section className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
-          <h2 className="text-3xl font-semibold text-slate-900">Book a Venue</h2>
-          <p className="mt-3 text-slate-600">Select a building, then a floor, then choose an available room.</p>
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 className="text-3xl font-semibold text-slate-900">Book a Venue</h2>
+              <p className="mt-3 text-slate-600">Select a building, then a floor, then choose an available room.</p>
+            </div>
+            <button
+              onClick={() => navigate('/app/faculty-dashboard')}
+              className="inline-flex items-center justify-center rounded-2xl border border-blue-600 bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+            >
+              Back to Dashboard
+            </button>
+          </div>
 
           {message && (
             <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">

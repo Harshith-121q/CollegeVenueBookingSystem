@@ -291,6 +291,68 @@ export const getMyBookings = async (req, res, next) => {
   }
 };
 
+export const cancelPendingBooking = async (req, res, next) => {
+  try {
+    const bookingId = req.params.id;
+    const user = req.user?.id;
+
+    if (!user) {
+      return res.status(401).json({ message: "You are not authorised" });
+    }
+
+    const existingBooking = await VenueBookingModel.findById(bookingId);
+    if (!existingBooking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    if (existingBooking.user?.toString() !== user.toString()) {
+      return res.status(403).json({ message: "You can only cancel your own bookings" });
+    }
+
+    if (existingBooking.bookedStatus === "cancelled") {
+      return res.status(200).json({
+        message: "Booking was already cancelled",
+        payload: existingBooking,
+      });
+    }
+
+    if (existingBooking.bookedStatus !== "pending") {
+      return res.status(400).json({ message: "Only pending bookings can be cancelled" });
+    }
+
+    const updatedBooking = await VenueBookingModel.findByIdAndUpdate(
+      bookingId,
+      {
+        bookedStatus: "cancelled",
+        reason: existingBooking.reason ? `${existingBooking.reason} | Cancelled by faculty` : "Cancelled by faculty",
+      },
+      { new: true }
+    )
+      .populate("venue", "name roomNumber type block floor capacity facilities")
+      .populate("user", "name email role");
+
+    try {
+      await NotificationModel.create({
+        title: "Venue booking cancelled",
+        message: `Your booking request for ${updatedBooking?.venue?.name || "the selected venue"} was cancelled by you before approval.`,
+        bookingId: updatedBooking?._id,
+        receiverRole: "ADMIN",
+        receiverId: user,
+        type: "BOOKING_CANCELLED",
+      });
+    } catch (notifyErr) {
+      console.error("Notification creation failed:", notifyErr?.message || notifyErr);
+    }
+
+    return res.status(200).json({
+      message: "Booking cancelled successfully",
+      payload: updatedBooking,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const updateBookingStatus = async (req, res, next) => {
   try {
     const bookingId = req.params.id;

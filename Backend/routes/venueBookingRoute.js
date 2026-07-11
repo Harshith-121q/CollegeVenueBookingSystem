@@ -1,5 +1,5 @@
 import exp from "express"
-import { bookVenue, getAdminBookingRequests, getAdminNotifications, getAutomationSetting, getMyBookings, getMyNotifications, updateAutomationSetting, updateBookingStatus, getVenueBookings } from "../controllers/venueBookingController.js";
+import { bookVenue, cancelPendingBooking, getAdminBookingRequests, getAdminNotifications, getAutomationSetting, getMyBookings, getMyNotifications, updateAutomationSetting, updateBookingStatus, getVenueBookings } from "../controllers/venueBookingController.js";
 import { aiApproveBooking } from "../controllers/aiApprovalController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { verifyApiKey } from "../middleware/verifyApiKey.js";
@@ -11,6 +11,7 @@ venueBookingApp.post("/book_venue/:id", verifyToken("FACULTY"), bookVenue);
 
 // get faculty booking requests
 venueBookingApp.get("/my_bookings", verifyToken("FACULTY"), getMyBookings);
+venueBookingApp.patch("/cancel_booking/:id", verifyToken("FACULTY"), cancelPendingBooking);
 venueBookingApp.get("/venue_bookings/:id", verifyToken("FACULTY"), getVenueBookings);
 
 // admin endpoints
