@@ -1,5 +1,5 @@
 import exp from "express"
-import { bookVenue, cancelPendingBooking, getAdminBookingRequests, getAdminNotifications, getAutomationSetting, getMyBookings, getMyNotifications, updateAutomationSetting, updateBookingStatus, getVenueBookings } from "../controllers/venueBookingController.js";
+import { bookVenue, cancelPendingBooking, deleteMyBookings, getAdminBookingRequests, getAdminNotifications, getAutomationSetting, getMyBookings, getMyNotifications, updateAutomationSetting, updateBookingStatus, getVenueBookings } from "../controllers/venueBookingController.js";
 import { aiApproveBooking } from "../controllers/aiApprovalController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { verifyApiKey } from "../middleware/verifyApiKey.js";
@@ -12,6 +12,7 @@ venueBookingApp.post("/book_venue/:id", verifyToken("FACULTY"), bookVenue);
 // get faculty booking requests
 venueBookingApp.get("/my_bookings", verifyToken("FACULTY"), getMyBookings);
 venueBookingApp.patch("/cancel_booking/:id", verifyToken("FACULTY"), cancelPendingBooking);
+venueBookingApp.delete("/delete_bookings", verifyToken("FACULTY"), deleteMyBookings);
 venueBookingApp.get("/venue_bookings/:id", verifyToken("FACULTY"), getVenueBookings);
 
 // admin endpoints
@@ -23,4 +24,4 @@ venueBookingApp.get("/automation_setting", verifyToken("ADMIN"), getAutomationSe
 venueBookingApp.patch("/automation_setting", verifyToken("ADMIN"), updateAutomationSetting);
 
 // AI approval endpoint
-venueBookingApp.post("/ai_approve/:id", verifyApiKey, aiApproveBooking);
+venueBookingApp.post("/ai-decision/:id", verifyApiKey, aiApproveBooking);

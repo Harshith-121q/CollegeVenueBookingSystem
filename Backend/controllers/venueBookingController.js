@@ -353,6 +353,45 @@ export const cancelPendingBooking = async (req, res, next) => {
   }
 };
 
+export const deleteMyBookings = async (req, res, next) => {
+  try {
+    const user = req.user?.id;
+    const { bookingIds } = req.body;
+
+    if (!user) {
+      return res.status(401).json({ message: "You are not authorised" });
+    }
+
+    if (!Array.isArray(bookingIds) || bookingIds.length === 0) {
+      return res.status(400).json({ message: "Please select at least one booking to delete" });
+    }
+
+    const validBookingIds = bookingIds.filter((id) => Types.ObjectId.isValid(id));
+
+    if (validBookingIds.length === 0) {
+      return res.status(400).json({ message: "Invalid booking selection" });
+    }
+
+    const ownedBookings = await VenueBookingModel.find({
+      _id: { $in: validBookingIds },
+      user,
+    }).select("_id");
+
+    if (ownedBookings.length !== validBookingIds.length) {
+      return res.status(403).json({ message: "You can only delete your own bookings" });
+    }
+
+    await VenueBookingModel.deleteMany({ _id: { $in: validBookingIds } });
+    await NotificationModel.deleteMany({ bookingId: { $in: validBookingIds } });
+
+    return res.status(200).json({
+      message: "Selected bookings deleted successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const updateBookingStatus = async (req, res, next) => {
   try {
     const bookingId = req.params.id;
