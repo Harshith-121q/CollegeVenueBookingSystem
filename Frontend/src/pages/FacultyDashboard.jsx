@@ -178,9 +178,16 @@ export default function FacultyDashboard() {
                 type="button"
                 onClick={handleDeleteSelectedBookings}
                 disabled={deletingBookings || selectedBookingIds.length === 0}
-                className="inline-flex items-center justify-center rounded-2xl border border-rose-200 bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:bg-slate-300"
               >
-                {deletingBookings ? 'Deleting...' : `Delete Selected (${selectedBookingIds.length})`}
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18" />
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                  <path d="M10 11v6" />
+                  <path d="M14 11v6" />
+                </svg>
+                <span>{deletingBookings ? 'Deleting...' : selectedBookingIds.length > 0 ? `Delete (${selectedBookingIds.length})` : 'Delete'}</span>
               </button>
             )}
           </div>

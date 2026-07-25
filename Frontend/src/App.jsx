@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
 // import { RoleProvider } from "./context/RoleContext"
 // import { NotificationProvider } from "./context/NotificationContext"
@@ -19,6 +19,7 @@ import RoleBasedRoute from "./routes/RoleBasedRoute"
 
 const routeObj = createBrowserRouter([
   { path: "/", element: <Auth /> },
+  { path: "/login", element: <Auth /> },
   {
     path: "/app",
     element: <RootLayout />,
@@ -32,6 +33,7 @@ const routeObj = createBrowserRouter([
       { path: "section-students", element: <ProtectedRoute><RoleBasedRoute requiredRole="faculty"><SectionStudents /></RoleBasedRoute></ProtectedRoute> },
     ]
   },
+  { path: "*", element: <Navigate to="/" replace /> }
 ])
 
 function App() {
