@@ -291,6 +291,22 @@ export const getMyBookings = async (req, res, next) => {
   }
 };
 
+export const getBookedVenueBookings = async (req, res, next) => {
+  try {
+    const bookings = await VenueBookingModel.find({ bookedStatus: "booked" })
+      .populate("venue", "name roomNumber type block floor capacity facilities")
+      .populate("user", "name email role")
+      .sort({ date: 1, startTime: 1 });
+
+    res.status(200).json({
+      message: "Booked venue requests",
+      payload: bookings,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const cancelPendingBooking = async (req, res, next) => {
   try {
     const bookingId = req.params.id;
